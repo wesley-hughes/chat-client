@@ -219,6 +219,7 @@ body,
   left: calc(50% - 0.5rem);
 }
 
+
 .background {
   z-index: -1;
   position: absolute;
@@ -339,4 +340,12 @@ body,
   to {
     transform: translateY(100%);
   }
+}
+
+.input-container:focus {
+  outline: none;
+}
+
+*:focus {
+  outline: none;
 }
