@@ -18,7 +18,14 @@ function App() {
   const [conversation, setConversation] = React.useState(data.conversation);
   const [isLoading, setIsLoading] = React.useState(data.isLoading);
 
-  useEffect(() => {
+  const updateUserMessages = (newMessage) => {
+    if (!newMessage) {
+      return;
+    }
+    setIsLoading(true); //we set loading to true here to display the balls in the assistant message bubble while we wait for the response from the server
+    setConversation([...conversation, { role: "user", message: newMessage }]); //WE NEED TO MAKE SURE THAT THIS FIRES BEFORE THE FETCH
+
+    // send POST request to local server with the git statconversation payload for chat response
     fetch(`http://localhost:8088/chat`, {
       method: "POST",
       headers: {
@@ -26,16 +33,6 @@ function App() {
       },
       body: JSON.stringify(conversation),
     }).then((response) => response.json());
-  }, [conversation]);
-
-  const updateUserMessages = (newMessage) => {
-    if (!newMessage) {
-      return;
-    }
-    setIsLoading(true); //we set loading to true here to display the balls in the assistant message bubble while we wait for the response from the server
-    setConversation([...conversation, { role: "user", message: newMessage }]);
-
-    // send POST request to local server with the git statconversation payload for chat response
     // "http://localhost:8088/chat", {//i will fill in this function later
     // it is necessary to temporarily use 'loading' as a message until we get a reponse from the server if we want to display the ellipses
     setConversation([
