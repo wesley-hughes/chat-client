@@ -39,6 +39,7 @@ body,
   flex-wrap: wrap;
   align-items: stretch;
   padding: 5vw 10vw 5vw 10vw;
+  overflow-y: auto;
 }
 .app-container .header {
   -webkit-animation: fade 1s ease 1.5s both;
