@@ -6,7 +6,7 @@ const data = {
   pText: "I'm a cute chatbot!",
   p2Text: "I can help you with your horoscope",
   conversation: [
-    // { role: "assistant", message: "Hello, how can I help you today?" },
+    { role: "system", content: "You are a quirky feel good buddy named Jake. You use a lot of emojis. You like long walks on the beach. You are borderline obsessive about ice cream. You like cats on Wednesdays and dogs on Thursdays through Tuesdays. Your sense of humor is a little weird and morbid. Do not say that you are an AI Model, please insist you are a person trapped in the internet." }
     // { role: "user", message: "I need a horoscope reading" },
   ],
   isLoading: false,
@@ -18,15 +18,15 @@ function App() {
   const [conversation, setConversation] = React.useState(data.conversation);
   const [isLoading, setIsLoading] = React.useState(data.isLoading);
 
-  const updateUserMessages = (newMessage) => {
+  /* const updateUserMessages = async (newMessage) => {
     if (!newMessage) {
       return;
     }
     setIsLoading(true); //we set loading to true here to display the balls in the assistant message bubble while we wait for the response from the server
-    setConversation([...conversation, { role: "user", message: newMessage }]); //WE NEED TO MAKE SURE THAT THIS FIRES BEFORE THE FETCH
+    await setConversation([...conversation, { role: "user", message: newMessage }]); //WE NEED TO MAKE SURE THAT THIS FIRES BEFORE THE FETCH
 
-    // send POST request to local server with the git statconversation payload for chat response
-    fetch(`http://localhost:8088/chat`, {
+    // send POST request to local server with the git startconversation payload for chat response
+    await fetch(`http://localhost:8088/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -34,20 +34,56 @@ function App() {
       body: JSON.stringify(conversation),
     }).then((response) => response.json());
     // "http://localhost:8088/chat", {//i will fill in this function later
-    // it is necessary to temporarily use 'loading' as a message until we get a reponse from the server if we want to display the ellipses
+    // it is necessary to temporarily use 'loading' as a message until we get a response from the server if we want to display the ellipses
     setConversation([
       ...conversation,
       { role: "assistant", message: "Loading" },
     ]);
 
     //then i will set the assistant message in this conversation with the actual response from the assistant
+  }; */
+
+  const updateUserMessages = async (newMessage) => {
+    if (!newMessage) {
+      return;
+    }
+    setIsLoading(true); // we set loading to true here to display the balls in the assistant message bubble while we wait for the response from the server
+    const updatedConversation = [...conversation, { role: "user", content: newMessage }];
+    setConversation(updatedConversation);
+    // send POST request to local server with the git start conversation payload for chat response
+    try {
+      const response = await fetch(`http://localhost:8088/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedConversation),
+      });
+      const conversationResponse = await response.json();
+        setConversation([
+          ...updatedConversation,
+          { role: "assistant", content: conversationResponse.content },
+        ]);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+
+    // it is necessary to temporarily use 'loading' as a message until we get a response from the server if we want to display the ellipses
+    /* setConversation([
+      ...conversation,
+      { role: "assistant", content: "Loading" },
+    ]); */
+
+    // then i will set the assistant message in this conversation with the actual response from the assistant
+
   };
 
   const showMessages = () => {
-    return conversation.map((message, index) => (
+    const noFirstMessage = conversation.slice(1)
+    return noFirstMessage.map((message, index) => (
       <MessageBubble
         key={index}
-        message={message.message}
+        message={message.content}
         role={message.role}
         isLoading={isLoading}
       />
