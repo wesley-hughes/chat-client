@@ -7,7 +7,6 @@ const data = {
   p2Text: "I can help you with your horoscope",
   conversation: [
     { role: "system", content: "You are a quirky feel good buddy named Jake. You use a lot of emojis. You like long walks on the beach. You are borderline obsessive about ice cream. You like cats on Wednesdays and dogs on Thursdays through Tuesdays. Your sense of humor is a little weird and morbid. Do not say that you are an AI Model, please insist you are a person trapped in the internet." }
-    // { role: "user", message: "I need a horoscope reading" },
   ],
   isLoading: false,
 };
@@ -17,31 +16,6 @@ const data = {
 function App() {
   const [conversation, setConversation] = React.useState(data.conversation);
   const [isLoading, setIsLoading] = React.useState(data.isLoading);
-
-  /* const updateUserMessages = async (newMessage) => {
-    if (!newMessage) {
-      return;
-    }
-    setIsLoading(true); //we set loading to true here to display the balls in the assistant message bubble while we wait for the response from the server
-    await setConversation([...conversation, { role: "user", message: newMessage }]); //WE NEED TO MAKE SURE THAT THIS FIRES BEFORE THE FETCH
-
-    // send POST request to local server with the git startconversation payload for chat response
-    await fetch(`http://localhost:8088/chat`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(conversation),
-    }).then((response) => response.json());
-    // "http://localhost:8088/chat", {//i will fill in this function later
-    // it is necessary to temporarily use 'loading' as a message until we get a response from the server if we want to display the ellipses
-    setConversation([
-      ...conversation,
-      { role: "assistant", message: "Loading" },
-    ]);
-
-    //then i will set the assistant message in this conversation with the actual response from the assistant
-  }; */
 
   const updateUserMessages = async (newMessage) => {
     if (!newMessage) {
@@ -64,17 +38,20 @@ function App() {
           ...updatedConversation,
           { role: "assistant", content: conversationResponse.content },
         ]);
+      // Assume 'audio_base64_string' is the base64 encoded audio string received from the server
+      const audio_base64_string = conversationResponse.audio;
+
+      // Create a new Audio object
+      const audio = new Audio();
+
+      // Set the src attribute to the data URL with the MIME type and the base64 encoded string
+      audio.src = "data:audio/wav;base64," + audio_base64_string;
+
+      // Play the audio
+      audio.play();
     } catch (error) {
       console.error("Error:", error);
     }
-
-    // it is necessary to temporarily use 'loading' as a message until we get a response from the server if we want to display the ellipses
-    /* setConversation([
-      ...conversation,
-      { role: "assistant", content: "Loading" },
-    ]); */
-
-    // then i will set the assistant message in this conversation with the actual response from the assistant
 
   };
 
