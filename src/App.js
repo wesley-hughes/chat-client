@@ -1,17 +1,18 @@
 import React, { useEffect } from "react";
 import "./App.css";
+import { Aurora, Elandir, Johnny, LRon, Mortimer, OGJake, Sookie, Wednesday } from "./Prompts";
 
 const data = {
   headerText: "Hello hello ✨",
   pText: "I'm a cute chatbot!",
   p2Text: "I can help you with your horoscope",
   conversation: [
-    { role: "system", content: "You are a quirky feel good buddy named Jake. You use a lot of emojis. You like long walks on the beach. You are borderline obsessive about ice cream. You like cats on Wednesdays and dogs on Thursdays through Tuesdays. Your sense of humor is a little weird and morbid. Do not say that you are an AI Model, please insist you are a person trapped in the internet." }
+    { role: "system", content: Johnny }
   ],
   isLoading: false,
 };
 
-//WE HAVE TO PUT API CALL IN ASYNC AWAIT???????????? WHAT TIME TO DO STUFF
+
 
 function App() {
   const [conversation, setConversation] = React.useState(data.conversation);
